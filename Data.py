@@ -105,5 +105,3 @@ with open("ouessant_data.csv", newline='', encoding='utf-8') as fichier_csv:
         temp.append(float(ligne[3]))
         wind.append(float(ligne[4]))
 
-
-
