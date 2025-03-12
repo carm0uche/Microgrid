@@ -2,10 +2,14 @@ from Data import *
 from Classes import *
 
 def calcul_power_PV(i):
-    return PV_nb * Panneau_solaire.power * ppvCf[i]
+    current_power = PV_nb * Panneau_solaire.power * ppvCf[i]
+    Power_PV.append(current_power)
+    return current_power
 
 def calcul_power_WT(i):
-    return WT_nb * Eolienne.P_v[i]
+    current_power = WT_nb * Eolienne.P_v[i]
+    Power_WT.append(current_power)
+    return current_power
 
 def calcul_power_ENR(i):
     return calcul_power_PV(i) + calcul_power_WT(i)
