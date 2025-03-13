@@ -18,6 +18,8 @@ def balance(i):
     return calcul_power_ENR >= load[i]
 
 def set_energy_batt(v):
+    if level_batt[-1] + v < 0.2*Batterie.capacity:
+        print(f"Low battery at {date[i]}")
     if level_batt[-1] + v < 0:
         raise ValueError("Battery error : Energy level cannot be negative")
     level_batt.append(level_batt[-1] + v)

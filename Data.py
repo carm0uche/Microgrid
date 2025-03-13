@@ -10,6 +10,32 @@ sheet = wb.active
 #var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
 #list_values = [sheet[f"C{i}"].value for i in range(4, 12)]
 
+#Environment data
+
+import csv
+
+Lifetime = float(sheet["AA5"].value) if sheet["AA5"].value is not None else 0.0
+Discount_rate = float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0
+date = []
+load = []
+ppvCf = []
+temp = []
+wind = []
+n_lignes = 35065
+
+with open("ouessant_data.csv", newline='', encoding='utf-8') as fichier_csv:
+    lecteur = csv.reader(fichier_csv, delimiter=";")
+    next(lecteur)
+
+    for i, ligne in enumerate(lecteur):
+        if i >= n_lignes:
+            break
+        date.append(ligne[0])
+        load.append(float(ligne[1]))
+        ppvCf.append(float(ligne[2]))
+        temp.append(float(ligne[3]))
+        wind.append(float(ligne[4]))
+
 #PV
 
 PV_Name = "Panneau solaire"
@@ -29,7 +55,7 @@ W_Lifetime = float(sheet["K5"].value) if sheet["K5"].value is not None else 0.0
 W_Rated_power = float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0 
 W_CAPEX = float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0
 W_OPEX = float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0
-W_P_v = [[float(sheet[f"J{i}"].value) for i in range(18, 44)],[float(sheet[f"K{i}"].value) for i in range(18, 44)]]
+W_P_v = ["à remplir par Baptiste ce crack qui a dit qu'il s'en chargeait je certifie"]
 
 Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 
@@ -79,33 +105,6 @@ B_Discharge_pw_max = float(sheet["C14"].value) if sheet["C14"].value is not None
 
 Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
                 
-#Environment data
-
-import csv
-
-Lifetime = float(sheet["AA5"].value) if sheet["AA5"].value is not None else 0.0
-Discount_rate = float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0
-date = []
-load = []
-ppvCf = []
-temp = []
-wind = []
-n_lignes = 35065
-
-with open("ouessant_data.csv", newline='', encoding='utf-8') as fichier_csv:
-    lecteur = csv.reader(fichier_csv, delimiter=";")
-    next(lecteur)
-
-    for i, ligne in enumerate(lecteur):
-        if i >= n_lignes:
-            break
-        date.append(ligne[0])
-        load.append(float(ligne[1]))
-        ppvCf.append(float(ligne[2]))
-        temp.append(float(ligne[3]))
-        wind.append(float(ligne[4]))
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime, timedelta
