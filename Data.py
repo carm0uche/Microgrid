@@ -24,12 +24,12 @@ Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPE
 
 #Éolien
 
-W_Name = None
-W_Lifetime = None
-W_Rated_power = None 
-W_CAPEX = None
-W_OPEX = None
-W_P_v = None
+W_Name = "Eolienne"
+W_Lifetime = float(sheet["K5"].value) if sheet["K5"].value is not None else 0.0
+W_Rated_power = float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0 
+W_CAPEX = float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0
+W_OPEX = float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0
+W_P_v = [[float(sheet[f"J{i}"].value) for i in range(18, 44)],[float(sheet[f"K{i}"].value) for i in range(18, 44)]]
 
 Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 
