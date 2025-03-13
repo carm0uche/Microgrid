@@ -154,4 +154,4 @@ def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
 
 
 
-tracer_load_5_ans(date, load, fenetre_moyenne=24*7)
+#tracer_load_5_ans(date, load, fenetre_moyenne=24*7)

@@ -1,1 +1,1 @@
-from Data.py import *
+from Data import *
