@@ -105,3 +105,53 @@ with open("ouessant_data.csv", newline='', encoding='utf-8') as fichier_csv:
         temp.append(float(ligne[3]))
         wind.append(float(ligne[4]))
 
+
+import matplotlib.pyplot as plt
+import numpy as np
+from datetime import datetime, timedelta
+
+def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
+    """
+    Trace la charge électrique demandée (Load) en MW sur les 5 premières années avec une moyenne hebdomadaire.
+
+    :param date: Liste des dates sous format "12/01/2013 17:00"
+    :param load: Charge électrique demandée en kW (sera convertie en MW)
+    :param fenetre_moyenne: Nombre de points à moyenner (168 pour une moyenne hebdomadaire, car 24*7 = 168h)
+    """
+    # Convertir les dates en datetime
+    dates_dt = [datetime.strptime(d, "%d/%m/%Y %H:%M") for d in date]
+
+    # Déterminer la première année et la période des 5 ans
+    premiere_annee = dates_dt[0].year
+    derniere_annee = premiere_annee + 5
+
+    # Filtrer les données sur les 5 premières années
+    indices_5_ans = [i for i, d in enumerate(dates_dt) if premiere_annee <= d.year < derniere_annee]
+    dates_filtres = [dates_dt[i] for i in indices_5_ans]
+    load_filtree = [load[i] / 1000 for i in indices_5_ans]  # kW -> MW
+
+    # Appliquer une moyenne glissante hebdomadaire (168h)
+    load_moyenne = np.convolve(load_filtree, np.ones(fenetre_moyenne)/fenetre_moyenne, mode='valid')
+
+    # Réduire aussi le nombre de dates pour correspondre aux valeurs moyennées
+    dates_moyenne = dates_filtres[:len(load_moyenne)]
+
+    # Tracé du graphique
+    plt.figure(figsize=(14, 6))
+    plt.plot(dates_moyenne, load_moyenne, label="Charge électrique (moyenne hebdomadaire)", color='b')
+
+    plt.xlabel("Temps")
+    plt.ylabel("Charge (MW)")
+    plt.title(f"Évolution de la charge électrique - {premiere_annee}-{derniere_annee-1}")
+    plt.legend()
+    
+    # Réduction du nombre de labels sur l'axe X (un label tous les ~6 mois)
+    plt.xticks(dates_moyenne[::26*7*24], rotation=45)  # 26 semaines ≈ 6 mois
+
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.show()
+
+
+
+
+tracer_load_5_ans(date, load, fenetre_moyenne=24*7)
