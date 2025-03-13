@@ -4,7 +4,7 @@ import openpyxl
 
 #Extraction données Excel
 file_name = "Data_project.xlsx"  
-wb = openpyxl.load_workbook(file_name)
+wb = openpyxl.load_workbook(file_name, data_only = True)
 sheet = wb.active  
 
 #var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
@@ -35,47 +35,47 @@ Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 
 #Diesel
 
-D_Name = None
-D_Lifetime = None
-D_Max_power = None
-D_CAPEX = None
-D_OPEX = None
-D_Salvage = None
-D_Max_use = None
-D_Fuel_cost = None
-D_Fuel_consumption = None
-D_Efficiency = None
+D_Name = "Générateur diesel"
+D_Lifetime = float(sheet["S5"].value) if sheet["S5"].value is not None else 0.0
+D_Max_power = float(sheet["S6"].value) if sheet["S6"].value is not None else 0.0
+D_CAPEX = float(sheet["S8"].value) if sheet["S8"].value is not None else 0.0
+D_OPEX = float(sheet["S9"].value) if sheet["S9"].value is not None else 0.0
+D_Salvage = float(sheet["S10"].value) if sheet["S10"].value is not None else 0.0
+D_Max_use = float(sheet["S11"].value) if sheet["S11"].value is not None else 0.0
+D_Fuel_cost = float(sheet["S13"].value) if sheet["S13"].value is not None else 0.0
+D_Fuel_consumption = [[float(sheet[f"V{i}"].value) for i in range(5, 15)],[float(sheet[f"W{i}"].value) for i in range(5, 15)]]
+D_Efficiency = [[float(sheet[f"V{i}"].value) for i in range(5, 15)],[float(sheet[f"x{i}"].value) for i in range(5, 15)]]
 
 Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost, D_Fuel_consumption, D_Efficiency)
 
 #Hydrogène
 
-H_Name = None
-H_Lifetime = None
-H_Capacity = None
-H_Efficiency = None
-H_CAPEX_el = None
-H_OPEX_el = None
-H_CAPEX_tank = None
-H_OPEX_tank = None
-H_Salvage = None
-H_Max_start = None
-H_Max_use = None
+H_Name = "Stockage hydrogène"
+H_Lifetime = float(sheet["O5"].value) if sheet["O5"].value is not None else 0.0
+H_Capacity = float(sheet["O6"].value) if sheet["O6"].value is not None else 0.0
+H_Efficiency = float(sheet["O7"].value) if sheet["O7"].value is not None else 0.0
+H_CAPEX_el = float(sheet["O9"].value) if sheet["O9"].value is not None else 0.0
+H_OPEX_el = float(sheet["O10"].value) if sheet["O10"].value is not None else 0.0
+H_CAPEX_tank = float(sheet["O11"].value) if sheet["O11"].value is not None else 0.0
+H_OPEX_tank = float(sheet["O12"].value) if sheet["O12"].value is not None else 0.0
+H_Salvage = float(sheet["O14"].value) if sheet["O14"].value is not None else 0.0
+H_Max_start = float(sheet["O16"].value) if sheet["O16"].value is not None else 0.0
+H_Max_use = float(sheet["O17"].value) if sheet["O17"].value is not None else 0.0
 
 Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use)
 
 #Batteries
 
-B_Name = None
-B_Lifetime = None
-B_Capacity = None
-B_Efficiency = None
-B_CAPEX = None
-B_OPEX = None
-B_State_charge_min = None
-B_Thrpt = None
-B_Charge_pw_max = None
-B_Discharge_pw_max = None
+B_Name = "Batteries lithium"
+B_Lifetime = float(sheet["C6"].value) if sheet["C6"].value is not None else 0.0
+B_Capacity = float(sheet["C7"].value) if sheet["C7"].value is not None else 0.0
+B_Efficiency = float(sheet["C12"].value) if sheet["C12"].value is not None else 0.0
+B_CAPEX = float(sheet["C10"].value) if sheet["C10"].value is not None else 0.0
+B_OPEX = float(sheet["C9"].value) if sheet["C9"].value is not None else 0.0
+B_State_charge_min = float(sheet["C15"].value) if sheet["C15"].value is not None else 0.0
+B_Thrpt = float(sheet["C5"].value) if sheet["C5"].value is not None else 0.0
+B_Charge_pw_max = float(sheet["C13"].value) if sheet["C13"].value is not None else 0.0
+B_Discharge_pw_max = float(sheet["C14"].value) if sheet["C14"].value is not None else 0.0
 
 Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
                 
@@ -83,8 +83,8 @@ Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B
 
 import csv
 
-Lifetime = None
-Discount_rate = None
+Lifetime = float(sheet["AA5"].value) if sheet["AA5"].value is not None else 0.0
+Discount_rate = float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0
 date = []
 load = []
 ppvCf = []
@@ -154,4 +154,4 @@ def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
 
 
 
-tracer_load_5_ans(date, load, fenetre_moyenne=24*7)
+#tracer_load_5_ans(date, load, fenetre_moyenne=24*7)
