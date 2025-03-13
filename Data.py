@@ -2,23 +2,23 @@ import csv
 from Classes import *
 import openpyxl
 
-#file_name = "datas.xlsx"  
-#wb = openpyxl.load_workbook(file_name)
-#sheet = wb.active  
+#Extraction données Excel
+file_name = "Data_project.xlsx"  
+wb = openpyxl.load_workbook(file_name)
+sheet = wb.active  
 
-#var = sheet["B5"].value
-
+#var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
 #list_values = [sheet[f"C{i}"].value for i in range(4, 12)]
 
 #PV
 
-PV_Name = None
-PV_Lifetime = None
-PV_Power = None 
-PV_Derating_factor = None
-PV_CAPEX = None
-PV_OPEX = None
-PV_Efficiency = None 
+PV_Name = "Panneau solaire"
+PV_Lifetime = float(sheet["G5"].value) if sheet["G5"].value is not None else 0.0
+PV_Power = float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0 
+PV_Derating_factor = float(sheet["G11"].value) if sheet["G11"].value is not None else 0.0
+PV_CAPEX = float(sheet["G9"].value) if sheet["G9"].value is not None else 0.0
+PV_OPEX = float(sheet["G8"].value) if sheet["G8"].value is not None else 0.0
+PV_Efficiency = sheet["G13"].value if sheet["G13"].value is not None else 0.0 
 
 Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
 
