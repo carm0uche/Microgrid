@@ -15,7 +15,8 @@ def calcul_power_ENR(i):
     return calcul_power_PV(i) + calcul_power_WT(i)
 
 def balance(i):
-    return calcul_power_ENR >= load[i]
+    current_power_ENR = calcul_power_ENR
+    return [current_power_ENR >= load[i], current_power_ENR - load[i]]
 
 def set_energy_batt(v):
     if level_batt[-1] + v < 0.2*Batterie.capacity:
@@ -31,6 +32,28 @@ def set_energy_h2(v):
 
 def set_power_gen(v):
     Power_gen.append(v) 
+
+def dispatch(i):
+    [allow, number] = balance(i)
+    if allow :
+        if level_batt[-1] < Batterie.capacity :
+            "charger la batterie"
+        else :
+            if level_h2[-1] < Stockage_hydrogene.capacity:
+                "charger hydrogène"
+            else :
+                "curtailment"
+    else :
+        need = - number
+        if level_batt[-1] > Batterie.state_charge_min * Batterie.capacity :
+            "utiliser la batterie"
+        else :
+            if level_h2[-1] > 0 :
+                "utiliser l'hydrogène"
+            else : 
+                "allumer le générateur"
+                
+
 
 
 
