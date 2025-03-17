@@ -1,6 +1,7 @@
 import csv
 from Classes import *
 import openpyxl
+import sys
 
 #Extraction données Excel
 file_name = "Data_project.xlsx"  
@@ -42,6 +43,7 @@ PV_Name = "Panneau solaire"
 PV_Lifetime = float(sheet["G5"].value) if sheet["G5"].value is not None else 0.0
 PV_Power = float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0 
 PV_Derating_factor = float(sheet["G11"].value) if sheet["G11"].value is not None else 0.0
+print(PV_Derating_factor)
 PV_CAPEX = float(sheet["G9"].value) if sheet["G9"].value is not None else 0.0
 PV_OPEX = float(sheet["G8"].value) if sheet["G8"].value is not None else 0.0
 PV_Efficiency = sheet["G13"].value if sheet["G13"].value is not None else 0.0 
@@ -153,4 +155,22 @@ def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
 
 
 
-#tracer_load_5_ans(date, load, fenetre_moyenne=24*7)
+#fichier recap données
+
+with open("recap_datas.txt", "w") as f:
+    sys.stdout = f  # Redirige tous les prints vers le fichier
+    print("-- PV --")
+    Panneau_solaire.display_info()
+    print()
+    print("-- WT --")
+    Eolienne.display_info()
+    print()
+    print("-- Fuel --")
+    Generateur_diesel.display_info()
+    print()
+    print("-- H2 --")
+    Stockage_hydrogene.display_info()
+    print()
+    print("-- Batt --")
+    Batterie.display_info()
+

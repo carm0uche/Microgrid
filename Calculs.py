@@ -4,10 +4,12 @@ from Classes import *
 def calcul_power_PV(i, current_profile):
     current_power = PV_nb * Panneau_solaire.power * ppvCf[i]
     current_profile[1] = [current_power] 
+    return None
 
 def calcul_power_WT(i, current_profile):
     current_power = WT_nb * Eolienne.P_v[i]
     current_profile[0] = [current_power]
+    return None
 
 def calcul_power_ENR(i):
     return calcul_power_PV(i) + calcul_power_WT(i)
@@ -23,17 +25,18 @@ def set_energy_batt(v, current_profile):
         raise ValueError("Battery error : Energy level cannot be negative")
     current_set = min(profile[3][-1] + v, Batterie.capacity)
     if current_set == Batterie.capacity :
-        current_profile[5] = [Batterie.capacity - profile[3][-1] - v]
+        set_energy_h2(profile[3][-1] + v - Batterie.capacity, current_profile)
     current_profile[3] = [current_set]
+    return None
 
 def set_energy_h2(v, current_profile):
     if profile[4][-1] + v < 0:
         raise ValueError("H2 error : Energy level cannot be negative")
     current_set = min(profile[4][-1] + v, Stockage_hydrogene.capacity)
     if current_set == Stockage_hydrogene.capacity :
-        current_profile[5] = [Stockage_hydrogene.capacity - profile[4][-1] - v]
+        current_profile[5] = [profile[4][-1] + v - Stockage_hydrogene.capacity]
     current_profile[4] = [current_set]
-
+    return None
 
 def set_power_gen(v, current_profile):
     current_profile=[v] 
