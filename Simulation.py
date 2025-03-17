@@ -10,10 +10,8 @@ Batt_nb = None
 batt_init_value = 0
 h2_init_value = 0
 
-level_batt = [batt_init_value]
-level_h2 = [h2_init_value]
+#profile = [Power_WT, Power_PV, Power_gen, level_batt, level_h2, curtailment, shortage]
+profile = [[], [], [], [], [], [], []]
 
-Power_WT = []
-Power_PV = []
-Power_gen = []
+
 
