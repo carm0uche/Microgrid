@@ -20,8 +20,6 @@ ppvCf = df.iloc[:, 2].astype(float).tolist()
 temp = df.iloc[:, 3].astype(float).tolist()
 wind = df.iloc[:, 4].astype(float).tolist()
 
-print(ppvCf[:10])
-
 # Charger les données Excel avec pandas
 file_name = "Data_project.xlsx"
 df_excel = pd.read_excel(file_name, sheet_name=0, header=None)

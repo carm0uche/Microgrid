@@ -9,7 +9,7 @@ Batt_nb = None
 
 #Valeurs initiales batterie & H2
 batt_init_value = 0.5 * Batterie.capacity
-h2_init_value = 0;5 * Stockage_hydrogene.capacity
+h2_init_value = 0.5 * Stockage_hydrogene.capacity
 
 #profile = [Power_WT, Power_PV, Power_gen, level_batt, level_h2, curtailment, shortage]
 profile = [[0], [0], [0], [batt_init_value], [h2_init_value], [0], [0]]
