@@ -57,4 +57,13 @@ for i in range(25) :
     opex_annualise_batterie = opex_annuel_batterie/(1+Discount_rate)**i
     Opex_batterie.append(opex_annualise_batterie)
 
-print(Opex_batterie)
+#print(Opex_batterie)
+    
+
+Opex_generateur = []
+opex_annuel_generateur = (float(sheet["S9"].value) if sheet["S9"].value is not None else 0.0) * (float(sheet["S6"].value) if sheet["S6"].value is not None else 0.0)
+for i in range(25) :
+    opex_annualise_generateur = opex_annuel_generateur/(1+Discount_rate)**i
+    Opex_generateur.append(opex_annualise_generateur)
+
+print(Opex_generateur)
