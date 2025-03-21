@@ -1,112 +1,88 @@
-import csv
 from Classes import *
-import openpyxl
 import sys
-
-#Extraction données Excel
-file_name = "Data_project.xlsx"  
-wb = openpyxl.load_workbook(file_name, data_only = True)
-sheet = wb.active  
-
+ 
 #var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
 #list_values = [sheet[f"C{i}"].value for i in range(4, 12)]
 
 #Environment data
 
-import csv
+import pandas as pd
 
-Lifetime = float(sheet["AA5"].value) if sheet["AA5"].value is not None else 0.0
-Discount_rate = float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0
-date = []
-load = []
-ppvCf = []
-temp = []
-wind = []
-n_lignes = 35065
+n_lignes = 35064  # Nombre de lignes à charger
 
-with open("ouessant_data.csv", newline='', encoding='utf-8') as fichier_csv:
-    lecteur = csv.reader(fichier_csv, delimiter=";")
-    next(lecteur)
+# Charger le CSV avec pandas
+df = pd.read_csv("ouessant_data.csv", delimiter=";", encoding="utf-8", nrows=n_lignes)
 
-    for i, ligne in enumerate(lecteur):
-        if i >= n_lignes:
-            break
-        date.append(ligne[0])
-        load.append(float(ligne[1]))
-        ppvCf.append(float(ligne[2]))
-        temp.append(float(ligne[3]))
-        wind.append(float(ligne[4]))
+# Extraire les colonnes sous forme de listes
+date = df.iloc[:, 0].tolist()
+load = df.iloc[:, 1].astype(float).tolist()
+ppvCf = df.iloc[:, 2].astype(float).tolist()
+temp = df.iloc[:, 3].astype(float).tolist()
+wind = df.iloc[:, 4].astype(float).tolist()
 
-#PV
+print(ppvCf[:10])
 
+# Charger les données Excel avec pandas
+file_name = "Data_project.xlsx"
+df_excel = pd.read_excel(file_name, sheet_name=0, header=None)
+
+# Extraction des données Excel
 PV_Name = "Panneau solaire"
-PV_Lifetime = float(sheet["G5"].value) if sheet["G5"].value is not None else 0.0
-PV_Power = float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0 
-PV_Derating_factor = float(sheet["G11"].value) if sheet["G11"].value is not None else 0.0
-print(PV_Derating_factor)
-PV_CAPEX = float(sheet["G9"].value) if sheet["G9"].value is not None else 0.0
-PV_OPEX = float(sheet["G8"].value) if sheet["G8"].value is not None else 0.0
-PV_Efficiency = sheet["G13"].value if sheet["G13"].value is not None else 0.0 
+PV_Lifetime = df_excel.iloc[4, 6] if pd.notna(df_excel.iloc[4, 6]) else 0.0
+PV_Power = df_excel.iloc[5, 6] if pd.notna(df_excel.iloc[5, 6]) else 0.0
+PV_Derating_factor = df_excel.iloc[10, 6] if pd.notna(df_excel.iloc[10, 6]) else 0.0
+PV_CAPEX = df_excel.iloc[8, 6] if pd.notna(df_excel.iloc[8, 6]) else 0.0
+PV_OPEX = df_excel.iloc[7, 6] if pd.notna(df_excel.iloc[7, 6]) else 0.0
+PV_Efficiency = df_excel.iloc[12, 6] if pd.notna(df_excel.iloc[12, 6]) else 0.0
 
-Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
-
-#Éolien
-
-W_Name = "Eolienne"
-W_Lifetime = float(sheet["K5"].value) if sheet["K5"].value is not None else 0.0
-W_Rated_power = float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0 
-W_CAPEX = float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0
-W_OPEX = float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0
+W_Name = "Éolienne"
+W_Lifetime = df_excel.iloc[4, 10] if pd.notna(df_excel.iloc[4, 10]) else 0.0
+W_Rated_power = df_excel.iloc[5, 10] if pd.notna(df_excel.iloc[5, 10]) else 0.0
+W_CAPEX = df_excel.iloc[7, 10] if pd.notna(df_excel.iloc[7, 10]) else 0.0
+W_OPEX = df_excel.iloc[8, 10] if pd.notna(df_excel.iloc[8, 10]) else 0.0
 W_P_v = ["à remplir par Baptiste ce crack qui a dit qu'il s'en chargeait je certifie"]
 
-Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
-
-#Diesel
-
 D_Name = "Générateur diesel"
-D_Lifetime = float(sheet["S5"].value) if sheet["S5"].value is not None else 0.0
-D_Max_power = float(sheet["S6"].value) if sheet["S6"].value is not None else 0.0
-D_CAPEX = float(sheet["S8"].value) if sheet["S8"].value is not None else 0.0
-D_OPEX = float(sheet["S9"].value) if sheet["S9"].value is not None else 0.0
-D_Salvage = float(sheet["S10"].value) if sheet["S10"].value is not None else 0.0
-D_Max_use = float(sheet["S11"].value) if sheet["S11"].value is not None else 0.0
-D_Fuel_cost = float(sheet["S13"].value) if sheet["S13"].value is not None else 0.0
-D_Fuel_consumption = [[float(sheet[f"V{i}"].value) for i in range(5, 15)],[float(sheet[f"W{i}"].value) for i in range(5, 15)]]
-D_Efficiency = [[float(sheet[f"V{i}"].value) for i in range(5, 15)],[float(sheet[f"x{i}"].value) for i in range(5, 15)]]
+D_Lifetime = df_excel.iloc[4, 18] if pd.notna(df_excel.iloc[4, 18]) else 0.0
+D_Max_power = df_excel.iloc[5, 18] if pd.notna(df_excel.iloc[5, 18]) else 0.0
+D_CAPEX = df_excel.iloc[7, 18] if pd.notna(df_excel.iloc[7, 18]) else 0.0
+D_OPEX = df_excel.iloc[8, 18] if pd.notna(df_excel.iloc[8, 18]) else 0.0
+D_Salvage = df_excel.iloc[9, 18] if pd.notna(df_excel.iloc[9, 18]) else 0.0
+D_Max_use = df_excel.iloc[10, 18] if pd.notna(df_excel.iloc[10, 18]) else 0.0
+D_Fuel_cost = df_excel.iloc[12, 18] if pd.notna(df_excel.iloc[12, 18]) else 0.0
+D_Fuel_consumption = [df_excel.iloc[4:14, 21].tolist(), df_excel.iloc[4:14, 22].tolist()]
+D_Efficiency = [df_excel.iloc[4:14, 21].tolist(), df_excel.iloc[4:14, 23].tolist()]
 
+H_Name = "Stockage Hydrogène"
+H_Lifetime = df_excel.iloc[4, 14] if pd.notna(df_excel.iloc[4, 14]) else 0.0
+H_Capacity = df_excel.iloc[5, 14] if pd.notna(df_excel.iloc[5, 14]) else 0.0
+H_Efficiency = df_excel.iloc[6, 14] if pd.notna(df_excel.iloc[6, 14]) else 0.0
+H_CAPEX_el = df_excel.iloc[8, 14] if pd.notna(df_excel.iloc[8, 14]) else 0.0
+H_OPEX_el = df_excel.iloc[9, 14] if pd.notna(df_excel.iloc[9, 14]) else 0.0
+H_CAPEX_tank = df_excel.iloc[10, 14] if pd.notna(df_excel.iloc[10, 14]) else 0.0
+H_OPEX_tank = df_excel.iloc[11, 14] if pd.notna(df_excel.iloc[11, 14]) else 0.0
+H_Salvage = df_excel.iloc[13, 14] if pd.notna(df_excel.iloc[13, 14]) else 0.0
+H_Max_start = df_excel.iloc[15, 14] if pd.notna(df_excel.iloc[15, 14]) else 0.0
+H_Max_use = df_excel.iloc[16, 14] if pd.notna(df_excel.iloc[16, 14]) else 0.0
+
+B_Name = "Batterie lithium"
+B_Lifetime = df_excel.iloc[5, 2] if pd.notna(df_excel.iloc[5, 2]) else 0.0
+B_Capacity = df_excel.iloc[6, 2] if pd.notna(df_excel.iloc[6, 2]) else 0.0
+B_Efficiency = df_excel.iloc[11, 2] if pd.notna(df_excel.iloc[11, 2]) else 0.0
+B_CAPEX = df_excel.iloc[9, 2] if pd.notna(df_excel.iloc[9, 2]) else 0.0
+B_OPEX = df_excel.iloc[8, 2] if pd.notna(df_excel.iloc[8, 2]) else 0.0
+B_State_charge_min = df_excel.iloc[14, 2] if pd.notna(df_excel.iloc[14, 2]) else 0.0
+B_Thrpt = df_excel.iloc[4, 2] if pd.notna(df_excel.iloc[4, 2]) else 0.0
+B_Charge_pw_max = df_excel.iloc[12, 2] if pd.notna(df_excel.iloc[12, 2]) else 0.0
+B_Discharge_pw_max = df_excel.iloc[13, 2] if pd.notna(df_excel.iloc[13, 2]) else 0.0
+
+# Création des objets
+Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
+Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost, D_Fuel_consumption, D_Efficiency)
-
-#Hydrogène
-
-H_Name = "Stockage hydrogène"
-H_Lifetime = float(sheet["O5"].value) if sheet["O5"].value is not None else 0.0
-H_Capacity = float(sheet["O6"].value) if sheet["O6"].value is not None else 0.0
-H_Efficiency = float(sheet["O7"].value) if sheet["O7"].value is not None else 0.0
-H_CAPEX_el = float(sheet["O9"].value) if sheet["O9"].value is not None else 0.0
-H_OPEX_el = float(sheet["O10"].value) if sheet["O10"].value is not None else 0.0
-H_CAPEX_tank = float(sheet["O11"].value) if sheet["O11"].value is not None else 0.0
-H_OPEX_tank = float(sheet["O12"].value) if sheet["O12"].value is not None else 0.0
-H_Salvage = float(sheet["O14"].value) if sheet["O14"].value is not None else 0.0
-H_Max_start = float(sheet["O16"].value) if sheet["O16"].value is not None else 0.0
-H_Max_use = float(sheet["O17"].value) if sheet["O17"].value is not None else 0.0
-
 Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use)
-
-#Batteries
-
-B_Name = "Batteries lithium"
-B_Lifetime = float(sheet["C6"].value) if sheet["C6"].value is not None else 0.0
-B_Capacity = float(sheet["C7"].value) if sheet["C7"].value is not None else 0.0
-B_Efficiency = float(sheet["C12"].value) if sheet["C12"].value is not None else 0.0
-B_CAPEX = float(sheet["C10"].value) if sheet["C10"].value is not None else 0.0
-B_OPEX = float(sheet["C9"].value) if sheet["C9"].value is not None else 0.0
-B_State_charge_min = float(sheet["C15"].value) if sheet["C15"].value is not None else 0.0
-B_Thrpt = float(sheet["C5"].value) if sheet["C5"].value is not None else 0.0
-B_Charge_pw_max = float(sheet["C13"].value) if sheet["C13"].value is not None else 0.0
-B_Discharge_pw_max = float(sheet["C14"].value) if sheet["C14"].value is not None else 0.0
-
 Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
-                
+
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime, timedelta
@@ -152,25 +128,23 @@ def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.show()
 
-
-
-
 #fichier recap données
 
-with open("recap_datas.txt", "w") as f:
-    sys.stdout = f  # Redirige tous les prints vers le fichier
-    print("-- PV --")
-    Panneau_solaire.display_info()
-    print()
-    print("-- WT --")
-    Eolienne.display_info()
-    print()
-    print("-- Fuel --")
-    Generateur_diesel.display_info()
-    print()
-    print("-- H2 --")
-    Stockage_hydrogene.display_info()
-    print()
-    print("-- Batt --")
-    Batterie.display_info()
+#with open("recap_datas.txt", "w") as f:
+#    sys.stdout = f  # Redirige tous les prints vers le fichier
+#    print("-- PV --")
+#    Panneau_solaire.display_info()
+#    print()
+#    print("-- WT --")
+#    Eolienne.display_info()
+#    print()
+#    print("-- Fuel --")
+#    Generateur_diesel.display_info()
+#    print()
+#    print("-- H2 --")
+#    Stockage_hydrogene.display_info()
+#   print()
+#   print("-- Batt --")
+#   Batterie.display_info()
+
 
