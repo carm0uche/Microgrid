@@ -1,14 +1,21 @@
 import csv
 from Classes import *
 import openpyxl
+from scipy.interpolate import interp1d
+import numpy as np
 
 #Extraction données Excel
 file_name = "Data_project.xlsx"  
 wb = openpyxl.load_workbook(file_name)
 sheet = wb.active  
+sheet2 = wb["full_data"]
 
 #var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
 #list_values = [sheet[f"C{i}"].value for i in range(4, 12)]
+
+
+n_lignes = 35065
+
 
 #PV
 
@@ -29,7 +36,23 @@ W_Lifetime = float(sheet["K5"].value) if sheet["K5"].value is not None else 0.0
 W_Rated_power = float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0 
 W_CAPEX = float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0
 W_OPEX = float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0
-W_P_v = [[float(sheet[f"J{i}"].value) for i in range(18, 44)],[float(sheet[f"K{i}"].value) for i in range(18, 44)]]
+W_P_v = []
+
+#Pour l'interpolation ; d'abord les données
+d_vitesses = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 25.1, 26])
+d_puissances = np.array([0, 0, 0, 7, 30, 69, 124, 201, 308, 439, 559, 698, 797, 859, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 0, 0])
+interpolateur = interp1d(d_vitesses, d_puissances, kind='linear', fill_value="extrapolate")
+
+
+for i in range(3):
+    wind = (float(sheet2[f"E{i+2}"].value) if sheet2[f"E{i+2}"].value is not None else 0.0) * (50/3)**0.1 
+
+    W_P_v.append(interpolateur(wind))
+    
+W_P_v = list(W_P_v)
+
+
+print(W_P_v)
 
 Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 
