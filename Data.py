@@ -1,6 +1,4 @@
 from Classes import *
-import sys
-import openpyxl
 from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
@@ -43,7 +41,7 @@ W_Rated_power = df_excel.iloc[5, 10] if pd.notna(df_excel.iloc[5, 10]) else 0.0
 W_CAPEX = df_excel.iloc[7, 10] if pd.notna(df_excel.iloc[7, 10]) else 0.0
 W_OPEX = df_excel.iloc[8, 10] if pd.notna(df_excel.iloc[8, 10]) else 0.0
 
-df_excel_wind = pd.read_excel(file_name, sheet_name="full_data", header=None)
+df_excel_wind = pd.read_excel(file_name, sheet_name="full_data", header=0)
 
 # Initialiser la liste pour stocker les puissances interpolées
 W_P_v = []
@@ -54,11 +52,9 @@ d_puissances = np.array([0, 0, 0, 7, 30, 69, 124, 201, 308, 439, 559, 698, 797, 
 interpolateur = interp1d(d_vitesses, d_puissances, kind='linear', fill_value="extrapolate")
 
 # Boucle pour calculer les puissances interpolées
-for i in range(3):
-    wind = (float(df_excel.iloc[i, 4]) if pd.notna(df_excel.iloc[i, 4]) else 0.0) * (50/3)**0.1
+for i in range(n_lignes):
+    wind = (float(df_excel_wind.iloc[i, 4]) if pd.notna(df_excel_wind.iloc[i, 4]) else 0.0) * (50/3)**0.1
     W_P_v.append(interpolateur(wind))
-
-print(W_P_v)
 
 D_Name = "Générateur diesel"
 D_Lifetime = df_excel.iloc[4, 18] if pd.notna(df_excel.iloc[4, 18]) else 0.0

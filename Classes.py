@@ -38,7 +38,7 @@ class WT:
         print(f"Puissance nominale: {self.rated_power} kW")
         print(f"CAPEX: {self.capex} €/kW")
         print(f"OPEX: {self.opex} €/kW/an")
-        print(f"Puissance en fonction de la vitesse du vent: {self.P_v}")
+        print(f"Puissance en fonction de la vitesse du vent: {self.P_v[:10]},...")
 
 class Fuel:
     def __init__(self, name, lifetime, max_power, capex, opex, salvage, max_use, fuel_cost, fuel_consumption, efficiency):
