@@ -1,22 +1,113 @@
 import csv
 from Classes import *
 import openpyxl
-import sys
+from scipy.interpolate import interp1d
+import numpy as np
 
 #Extraction données Excel
 file_name = "Data_project.xlsx"  
-wb = openpyxl.load_workbook(file_name, data_only = True)
+wb = openpyxl.load_workbook(file_name)
 sheet = wb.active  
+sheet2 = wb["full_data"]
 
 #var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
 #list_values = [sheet[f"C{i}"].value for i in range(4, 12)]
 
+
+n_lignes = 35065
+
+
+#PV
+
+PV_Name = "Panneau solaire"
+PV_Lifetime = float(sheet["G5"].value) if sheet["G5"].value is not None else 0.0
+PV_Power = float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0 
+PV_Derating_factor = float(sheet["G11"].value) if sheet["G11"].value is not None else 0.0
+PV_CAPEX = float(sheet["G9"].value) if sheet["G9"].value is not None else 0.0
+PV_OPEX = float(sheet["G8"].value) if sheet["G8"].value is not None else 0.0
+PV_Efficiency = sheet["G13"].value if sheet["G13"].value is not None else 0.0 
+
+Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
+
+#Éolien
+
+W_Name = "Eolienne"
+W_Lifetime = float(sheet["K5"].value) if sheet["K5"].value is not None else 0.0
+W_Rated_power = float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0 
+W_CAPEX = float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0
+W_OPEX = float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0
+W_P_v = []
+
+#Pour l'interpolation ; d'abord les données
+d_vitesses = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 25.1, 26])
+d_puissances = np.array([0, 0, 0, 7, 30, 69, 124, 201, 308, 439, 559, 698, 797, 859, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 0, 0])
+interpolateur = interp1d(d_vitesses, d_puissances, kind='linear', fill_value="extrapolate")
+
+
+for i in range(3):
+    wind = (float(sheet2[f"E{i+2}"].value) if sheet2[f"E{i+2}"].value is not None else 0.0) * (50/3)**0.1 
+
+    W_P_v.append(interpolateur(wind))
+    
+W_P_v = list(W_P_v)
+
+
+print(W_P_v)
+
+Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
+
+#Diesel
+
+D_Name = None
+D_Lifetime = None
+D_Max_power = None
+D_CAPEX = None
+D_OPEX = None
+D_Salvage = None
+D_Max_use = None
+D_Fuel_cost = None
+D_Fuel_consumption = None
+D_Efficiency = None
+
+Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost, D_Fuel_consumption, D_Efficiency)
+
+#Hydrogène
+
+H_Name = None
+H_Lifetime = None
+H_Capacity = None
+H_Efficiency = None
+H_CAPEX_el = None
+H_OPEX_el = None
+H_CAPEX_tank = None
+H_OPEX_tank = None
+H_Salvage = None
+H_Max_start = None
+H_Max_use = None
+
+Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use)
+
+#Batteries
+
+B_Name = None
+B_Lifetime = None
+B_Capacity = None
+B_Efficiency = None
+B_CAPEX = None
+B_OPEX = None
+B_State_charge_min = None
+B_Thrpt = None
+B_Charge_pw_max = None
+B_Discharge_pw_max = None
+
+Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
+                
 #Environment data
 
 import csv
 
-Lifetime = float(sheet["AA5"].value) if sheet["AA5"].value is not None else 0.0
-Discount_rate = float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0
+Lifetime = None
+Discount_rate = None
 date = []
 load = []
 ppvCf = []
@@ -37,76 +128,7 @@ with open("ouessant_data.csv", newline='', encoding='utf-8') as fichier_csv:
         temp.append(float(ligne[3]))
         wind.append(float(ligne[4]))
 
-#PV
 
-PV_Name = "Panneau solaire"
-PV_Lifetime = float(sheet["G5"].value) if sheet["G5"].value is not None else 0.0
-PV_Power = float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0 
-PV_Derating_factor = float(sheet["G11"].value) if sheet["G11"].value is not None else 0.0
-print(PV_Derating_factor)
-PV_CAPEX = float(sheet["G9"].value) if sheet["G9"].value is not None else 0.0
-PV_OPEX = float(sheet["G8"].value) if sheet["G8"].value is not None else 0.0
-PV_Efficiency = sheet["G13"].value if sheet["G13"].value is not None else 0.0 
-
-Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
-
-#Éolien
-
-W_Name = "Eolienne"
-W_Lifetime = float(sheet["K5"].value) if sheet["K5"].value is not None else 0.0
-W_Rated_power = float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0 
-W_CAPEX = float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0
-W_OPEX = float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0
-W_P_v = ["à remplir par Baptiste ce crack qui a dit qu'il s'en chargeait je certifie"]
-
-Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
-
-#Diesel
-
-D_Name = "Générateur diesel"
-D_Lifetime = float(sheet["S5"].value) if sheet["S5"].value is not None else 0.0
-D_Max_power = float(sheet["S6"].value) if sheet["S6"].value is not None else 0.0
-D_CAPEX = float(sheet["S8"].value) if sheet["S8"].value is not None else 0.0
-D_OPEX = float(sheet["S9"].value) if sheet["S9"].value is not None else 0.0
-D_Salvage = float(sheet["S10"].value) if sheet["S10"].value is not None else 0.0
-D_Max_use = float(sheet["S11"].value) if sheet["S11"].value is not None else 0.0
-D_Fuel_cost = float(sheet["S13"].value) if sheet["S13"].value is not None else 0.0
-D_Fuel_consumption = [[float(sheet[f"V{i}"].value) for i in range(5, 15)],[float(sheet[f"W{i}"].value) for i in range(5, 15)]]
-D_Efficiency = [[float(sheet[f"V{i}"].value) for i in range(5, 15)],[float(sheet[f"x{i}"].value) for i in range(5, 15)]]
-
-Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost, D_Fuel_consumption, D_Efficiency)
-
-#Hydrogène
-
-H_Name = "Stockage hydrogène"
-H_Lifetime = float(sheet["O5"].value) if sheet["O5"].value is not None else 0.0
-H_Capacity = float(sheet["O6"].value) if sheet["O6"].value is not None else 0.0
-H_Efficiency = float(sheet["O7"].value) if sheet["O7"].value is not None else 0.0
-H_CAPEX_el = float(sheet["O9"].value) if sheet["O9"].value is not None else 0.0
-H_OPEX_el = float(sheet["O10"].value) if sheet["O10"].value is not None else 0.0
-H_CAPEX_tank = float(sheet["O11"].value) if sheet["O11"].value is not None else 0.0
-H_OPEX_tank = float(sheet["O12"].value) if sheet["O12"].value is not None else 0.0
-H_Salvage = float(sheet["O14"].value) if sheet["O14"].value is not None else 0.0
-H_Max_start = float(sheet["O16"].value) if sheet["O16"].value is not None else 0.0
-H_Max_use = float(sheet["O17"].value) if sheet["O17"].value is not None else 0.0
-
-Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use)
-
-#Batteries
-
-B_Name = "Batteries lithium"
-B_Lifetime = float(sheet["C6"].value) if sheet["C6"].value is not None else 0.0
-B_Capacity = float(sheet["C7"].value) if sheet["C7"].value is not None else 0.0
-B_Efficiency = float(sheet["C12"].value) if sheet["C12"].value is not None else 0.0
-B_CAPEX = float(sheet["C10"].value) if sheet["C10"].value is not None else 0.0
-B_OPEX = float(sheet["C9"].value) if sheet["C9"].value is not None else 0.0
-B_State_charge_min = float(sheet["C15"].value) if sheet["C15"].value is not None else 0.0
-B_Thrpt = float(sheet["C5"].value) if sheet["C5"].value is not None else 0.0
-B_Charge_pw_max = float(sheet["C13"].value) if sheet["C13"].value is not None else 0.0
-B_Discharge_pw_max = float(sheet["C14"].value) if sheet["C14"].value is not None else 0.0
-
-Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
-                
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime, timedelta
@@ -155,22 +177,4 @@ def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
 
 
 
-#fichier recap données
-
-with open("recap_datas.txt", "w") as f:
-    sys.stdout = f  # Redirige tous les prints vers le fichier
-    print("-- PV --")
-    Panneau_solaire.display_info()
-    print()
-    print("-- WT --")
-    Eolienne.display_info()
-    print()
-    print("-- Fuel --")
-    Generateur_diesel.display_info()
-    print()
-    print("-- H2 --")
-    Stockage_hydrogene.display_info()
-    print()
-    print("-- Batt --")
-    Batterie.display_info()
-
+#tracer_load_5_ans(date, load, fenetre_moyenne=24*7)
