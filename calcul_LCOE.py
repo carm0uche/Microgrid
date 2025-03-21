@@ -28,15 +28,33 @@ Capex_generateur = (float(sheet["K8"].value) if sheet["K8"].value is not None el
 
 
 #Opex pour 1 entité ; On va les créer sous forme de liste avec chaque élément qui correspondra à une année distincte
+Discount_rate = (float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0)
+
+
 Opex_PV = []
 opex_annuel_PV = (float(sheet["G8"].value) if sheet["G8"].value is not None else 0.0) * (float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0)
-Discount_rate = (float(sheet["AA6"].value) if sheet["AA6"].value is not None else 0.0)
+
 for i in range(25) : 
     opex_annualise_PV = opex_annuel_PV/(1+Discount_rate)**i
     Opex_PV.append(opex_annualise_PV)
 
 #print(Opex_PV)
-print(opex_annuel_PV)
+#print(opex_annuel_PV)
 #print(Discount_rate)
 
 
+Opex_WT = []
+opex_annuel_WT = (float(sheet["K9"].value) if sheet["K9"].value is not None else 0.0) * (float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0)
+for i in range(25) : 
+    opex_annualise_WT = opex_annuel_WT/(1+Discount_rate)**i
+    Opex_WT.append(opex_annualise_WT)
+#print(Opex_WT)
+
+
+Opex_batterie = []
+opex_annuel_batterie = (float(sheet["C7"].value) if sheet["C7"].value is not None else 0.0) * (float(sheet["C9"].value) if sheet["C9"].value is not None else 0.0)
+for i in range(25) : 
+    opex_annualise_batterie = opex_annuel_batterie/(1+Discount_rate)**i
+    Opex_batterie.append(opex_annualise_batterie)
+
+print(Opex_batterie)
