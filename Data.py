@@ -1,14 +1,18 @@
 from Classes import *
 import sys
- 
-#var = float(sheet["B5"].value) if sheet["B5"].value is not None else 0.0
-#list_values = [sheet[f"C{i}"].value for i in range(4, 12)]
-
-#Environment data
-
+import openpyxl
+from scipy.interpolate import interp1d
+import numpy as np
 import pandas as pd
 
 n_lignes = 35064  # Nombre de lignes à charger
+Lifetime = None
+Discount_rate = None
+date = []
+load = []
+ppvCf = []
+temp = []
+wind = []
 
 # Charger le CSV avec pandas
 df = pd.read_csv("ouessant_data.csv", delimiter=";", encoding="utf-8", nrows=n_lignes)
@@ -38,7 +42,23 @@ W_Lifetime = df_excel.iloc[4, 10] if pd.notna(df_excel.iloc[4, 10]) else 0.0
 W_Rated_power = df_excel.iloc[5, 10] if pd.notna(df_excel.iloc[5, 10]) else 0.0
 W_CAPEX = df_excel.iloc[7, 10] if pd.notna(df_excel.iloc[7, 10]) else 0.0
 W_OPEX = df_excel.iloc[8, 10] if pd.notna(df_excel.iloc[8, 10]) else 0.0
-W_P_v = ["à remplir par Baptiste ce crack qui a dit qu'il s'en chargeait je certifie"]
+
+df_excel_wind = pd.read_excel(file_name, sheet_name="full_data", header=None)
+
+# Initialiser la liste pour stocker les puissances interpolées
+W_P_v = []
+
+# Données pour l'interpolation
+d_vitesses = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 25.1, 26])
+d_puissances = np.array([0, 0, 0, 7, 30, 69, 124, 201, 308, 439, 559, 698, 797, 859, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 0, 0])
+interpolateur = interp1d(d_vitesses, d_puissances, kind='linear', fill_value="extrapolate")
+
+# Boucle pour calculer les puissances interpolées
+for i in range(3):
+    wind = (float(df_excel.iloc[i, 4]) if pd.notna(df_excel.iloc[i, 4]) else 0.0) * (50/3)**0.1
+    W_P_v.append(interpolateur(wind))
+
+print(W_P_v)
 
 D_Name = "Générateur diesel"
 D_Lifetime = df_excel.iloc[4, 18] if pd.notna(df_excel.iloc[4, 18]) else 0.0
