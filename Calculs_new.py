@@ -52,102 +52,102 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
 
     current_profile[0] = calcul_WT()
     current_profile[1] = calcul_PV()
-    print("jour :", i)
-    print("charge : ", load[0])
-    print("PV :", current_profile[1], "WT :", current_profile[0], "Somme :", current_profile[0]+current_profile[1])
-    print(allow)
+    ##print("jour :", i)
+    ##print("charge : ", load[0])
+    ##print("PV :", current_profile[1], "WT :", current_profile[0], "Somme :", current_profile[0]+current_profile[1])
+    ##print(allow)
     if allow :
-        print("allow = true")
+        ##print("allow = true")
 
-        print("batterie capacity :", profile [3][-1], "<", Batterie.capacity * param[4])
+        ##print("batterie capacity :", profile [3][-1], "<", Batterie.capacity * param[4])
         if profile[3][-1] < Batterie.capacity * param[4] :
-            print(True)
+            ##print(True)
             '''charger la batterie'''
 
-            print("puissance max de charge :", number ,"<=", Batterie.charge_pw_max * param[4] )
+            ##print("puissance max de charge :", number ,"<=", Batterie.charge_pw_max * param[4] )
             if number <= Batterie.charge_pw_max * param[4] :
-                print(True) 
+                ##print(True) 
                 current_profile[3] = set_energy_batt(number)
                 return current_profile
-            print(False)
+            ##print(False)
             '''charger la batterie et l'hydrogène'''
-            print("puissance de charge dépassée")
+            ##print("puissance de charge dépassée")
             current_profile[3] = set_energy_batt(Batterie.charge_pw_max * param[4])
             current_profile[4][0] += set_energy_h2(number - Batterie.charge_pw_max * param[4])[0]
             return current_profile
         
         '''charger l'hydrogène'''
-        print("charge h2 :",profile[4][-1]," <", Stockage_hydrogene.capacity * param[3])
+        ##print("charge h2 :",profile[4][-1]," <", Stockage_hydrogene.capacity * param[3])
         if profile[4][-1] < Stockage_hydrogene.capacity * param[3]:
-            print(True)
-            print("charge h2 :", number)
+            ##print(True)
+            ##print("charge h2 :", number)
             current_profile = set_energy_h2(number)
             return current_profile
         
-        print(False)
+        ##print(False)
         '''curtailment'''
-        print("curtailment :", number)
+        ##print("curtailment :", number)
         current_profile[5] = [number]
         return current_profile
     
     else :
-        print("allow = False")
-        print("Reste de la batterie :", profile[3][-1], ">", Batterie.state_charge_min * Batterie.capacity * param[4] )
+        ##print("allow = False")
+        ##print("Reste de la batterie :", profile[3][-1], ">", Batterie.state_charge_min * Batterie.capacity * param[4] )
         if profile[3][-1] > Batterie.state_charge_min * Batterie.capacity * param[4] :
             
-            print(True)
+            ##print(True)
             '''utiliser la batterie'''
-            print("Que de la batterie :",profile[3][-1] + number ,">", Batterie.state_charge_min * Batterie.capacity * param[4] )
+            ##print("Que de la batterie :",profile[3][-1] + number ,">", Batterie.state_charge_min * Batterie.capacity * param[4] )
             if profile[3][-1] + number > Batterie.state_charge_min * Batterie.capacity * param[4] :
-                print(True)
+                ##print(True)
                 current_profile[3] = set_energy_batt(number)
                 return current_profile
             
-            print(False)
+            ##print(False)
             current_level = profile[3][-1]
-            print("niveau de batterie :", current_level)
-            print("demande :", number)
+            ##print("niveau de batterie :", current_level)
+            ##print("demande :", number)
             current_profile[3] = set_energy_batt(Batterie.state_charge_min * Batterie.capacity * param[4] - current_level)
             number = number +  current_level - Batterie.state_charge_min * Batterie.capacity * param[4]
 
         current_profile[3] = [0]
-        print("Reste à combler :", number)
+        ##print("Reste à combler :", number)
     
-        print("Reste d'hydrogène :", profile[4][-1]," >", 0 )
+        ##print("Reste d'hydrogène :", profile[4][-1]," >", 0 )
         if profile[4][-1] > 0 :
-            print(True)
+            ##print(True)
             '''utiliser l'hydrogène'''
-            print("Suffisemment d'h2 :", profile[4][-1] + number," >", 0 )
+            ##print("Suffisemment d'h2 :", profile[4][-1] + number," >", 0 )
             if profile[4][-1] + number > 0 :
-                print(True)
+                ##print(True)
                 current_profile[4] = set_energy_h2(number)
                 return current_profile
-            print(False)
+            ##print(False)
 
             current_level = profile[4][-1]
-            print("niveau d'H2 :",current_level )
-            print("demande :", number)
+            ##print("niveau d'H2 :",current_level )
+            ##print("demande :", number)
             current_profile[4] = set_energy_h2(- current_level)
             number = number + current_level
-            print("reste à combler :", number)
+            ##print("reste à combler :", number)
 
         current_profile[4] = [0]
-        print(False) 
+        ##print(False) 
         '''allumer le générateur'''
-        print("Assez de puissance fuel :", -number, "<", Generateur_diesel.max_power * param[2] )
+        ##print("Assez de puissance fuel :", -number, "<", Generateur_diesel.max_power * param[2] )
         if -number < Generateur_diesel.max_power * param[2] : 
-            print(True)
+            ##print(True)
             current_profile[2] = [-number]
             return current_profile
-        print(False)
+        ##print(False)
 
         current_profile[2] = [Generateur_diesel.max_power * param[2]]
         current_profile[6] = Generateur_diesel.max_power * param[2] + number
-        print("Shortage :", Generateur_diesel.max_power * param[2] + number)
+        ##print("Shortage :", Generateur_diesel.max_power * param[2] + number)
         return current_profile
     
-def jour_de_plus(i, profile = profile0) : 
-
+def heure_de_plus(i, profile = profile0) : 
+    print("En cours de simulation :", i, "jours simulés")
     if i == 0 :
         current_profile = dispatch(i)
         return current_profile
@@ -156,10 +156,11 @@ def jour_de_plus(i, profile = profile0) :
     
         for j in range(len(current_profile)):
             profile[j] += current_profile[j]
-    
     return profile
 
-jour0 = jour_de_plus(0)
-jour1 = jour_de_plus(1, jour0)
-print(jour1)
+profile = heure_de_plus(0)
 
+for k in range(1,3) :
+     heure_de_plus(k,profile)
+    
+print(profile)
