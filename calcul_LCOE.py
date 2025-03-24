@@ -76,6 +76,13 @@ for i in range(25) :
     Opex_hydro_pile.append(opex_annuel_pileH)
 print (Opex_hydro_pile)
 
+Opex_hydro_electrol = []
+opex_annuel_electrolH = (float(sheet["O6"].value) if sheet["O6"].value is not None else 0.0) * (float(sheet["O14"].value) if sheet["O14"].value is not None else 0.0)
+for i in range(25) :
+    opex_annuel_electrolH = opex_annuel_electrolH/(1+Discount_rate)**i
+    Opex_hydro_electrol.append(opex_annuel_electrolH)
+print (Opex_hydro_electrol)
+
 
 
 
