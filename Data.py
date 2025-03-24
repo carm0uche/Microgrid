@@ -3,6 +3,7 @@ from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
 
+print("Extraction des données...")
 n_lignes = 35064  # Nombre de lignes à charger
 Lifetime = None
 Discount_rate = None
@@ -142,6 +143,7 @@ def tracer_load_5_ans(date, load, fenetre_moyenne=24*7):
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.show()
 
+print("Succès.")
 #fichier recap données
 
 #with open("recap_datas.txt", "w") as f:

@@ -1,5 +1,6 @@
 from Data import *
 from Classes import *
+from tqdm import tqdm
 
 #leviers d'optimisation
 #param = [PV_nb, WT_nb, Fuel_nb, H2_nb, Batt_nb]
@@ -14,7 +15,7 @@ profile0 = [[0], [0], [0], [batt_init_value], [h2_init_value], [0], [0]]
 
 def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 = h2_init_value):
 
-    current_profile = [[0], [0], [0], profile[3][-1], profile[4][-1], [0], [0]]
+    current_profile = [[0], [0], [0], [profile[3][-1]], [profile[4][-1]], [0], [0]]
 
     #calcul puissance PV
     def calcul_PV() :
@@ -147,7 +148,6 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
         return current_profile
     
 def heure_de_plus(i, profile = profile0) : 
-    print("En cours de simulation :", i, "jours simulés")
     if i == 0 :
         current_profile = dispatch(i)
         return current_profile
@@ -158,9 +158,10 @@ def heure_de_plus(i, profile = profile0) :
             profile[j] += current_profile[j]
     return profile
 
-profile = heure_de_plus(0)
+for i in tqdm(range(100), desc="Simulation en cours", unit="it"):   
+    profile = heure_de_plus(0)
 
-for k in range(1,3) :
+    for k in range(1,n_lignes) :
      heure_de_plus(k,profile)
     
-print(profile)
+    print("Fin de la simulation.")
