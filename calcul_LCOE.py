@@ -23,7 +23,8 @@ sheet = wb.active
 Capex_PV = (float(sheet["G9"].value) if sheet["G9"].value is not None else 0.0) * (float(sheet["G6"].value) if sheet["G6"].value is not None else 0.0)
 Capex_WT = (float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0) * (float(sheet["K6"].value) if sheet["K6"].value is not None else 0.0)
 Capex_batterie = (float(sheet["C7"].value) if sheet["C7"].value is not None else 0.0) * (float(sheet["C10"].value) if sheet["C10"].value is not None else 0.0)
-#Capex_hydro = 
+Capex_hydro_pile = (float(sheet["O6"].value) if sheet["O6"].value is not None else 0.0) * (float(sheet["O9"].value) if sheet["09"].value is not None else 0.0)
+Capex_hydro_electrol = (float(sheet["06"].value) if sheet["06"].value is not None else 0.0) * (float(sheet["O13"].value) if sheet["O13"].value is not None else 0.0)
 Capex_generateur = (float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0) * (float(sheet["K8"].value) if sheet["K8"].value is not None else 0.0)
 
 
