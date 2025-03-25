@@ -21,11 +21,11 @@ def objective(params):
 
 # Définition de l'espace de recherche
 space = [
-    Integer(0, 100, name="n_pv"),  # Exemple : entre 0 et 100 panneaux PV
-    Integer(0, 5, name="n_wt"),   # Éoliennes
-    Integer(0, 5, name="n_gen"),  # Générateurs
-    Integer(0, 50, name="n_h2"),   # Stockage hydrogène
-    Integer(0, 100, name="n_batt") # Batteries
+    Integer(0, 100, name="nb_PV"),  # Exemple : entre 0 et 100 panneaux PV
+    Integer(0, 5, name="nb_WT"),   # Éoliennes
+    Integer(0, 5, name="nb_gen"),  # Générateurs
+    Integer(0, 50, name="nb_h2"),   # Stockage hydrogène
+    Integer(0, 100, name="nb_batt") # Batteries
 ]
 
 # Exécution de l'optimisation bayésienne
