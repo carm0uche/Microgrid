@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 #leviers d'optimisation
 #param = [PV_nb, WT_nb, Fuel_nb, H2_nb, Batt_nb]
-param = [1, 1, 1, 1, 1]
+param = [0, 0, 0, 0, 0]
 
 #Valeurs initiales batterie & H2
 batt_init_value = 0.5 * Batterie.capacity * param[4]
@@ -147,21 +147,32 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
         ##print("Shortage :", Generateur_diesel.max_power * param[2] + number)
         return current_profile
     
-def heure_de_plus(i, profile = profile0) : 
+def heure_de_plus(i, profile = profile0, params = param) : 
     if i == 0 :
-        current_profile = dispatch(i)
+        current_profile = dispatch(i, profile0, params)
         return current_profile
     else :
-        current_profile = dispatch(i, profile)
+        current_profile = dispatch(i, profile, params)
     
         for j in range(len(current_profile)):
             profile[j] += current_profile[j]
     return profile
 
-for i in tqdm(range(100), desc="Simulation en cours", unit="it"):   
-    profile = heure_de_plus(0)
+def calcul_simu(params, simulation = False):
+    profile = heure_de_plus(0, profile0, params)
 
     for k in range(1,n_lignes) :
-     heure_de_plus(k,profile)
+        heure_de_plus(k, profile, params)
+
+    if simulation :
+        return [profile[2], profile[6]]
     
-    print("Fin de la simulation.")
+    return profile
+
+#for i in tqdm(range(100), desc="Simulation en cours", unit="it"):   
+    #profile = heure_de_plus(0)
+
+    #for k in range(1,n_lignes) :
+     #heure_de_plus(k,profile)
+    
+    #print("Fin de la simulation.")
