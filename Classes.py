@@ -41,7 +41,7 @@ class WT:
         print(f"Puissance en fonction de la vitesse du vent: {self.P_v[:10]},...")
 
 class Fuel:
-    def __init__(self, name, lifetime, max_power, capex, opex, salvage, max_use, fuel_cost, fuel_consumption, efficiency):
+    def __init__(self, name, lifetime, max_power, capex, opex, salvage, max_use, fuel_cost):
         """
         """
         self.name = name
@@ -52,8 +52,6 @@ class Fuel:
         self.salvage = salvage
         self.max_use = max_use
         self.fuel_cost = fuel_cost
-        self.fuel_consumption = fuel_consumption
-        self.efficiency = efficiency
 
     def display_info(self):
         """Affiche les informations sur la source d'énergie."""
@@ -64,8 +62,6 @@ class Fuel:
         print(f"OPEX: {self.opex} €/kW/an")
         print(f"Prix de récupération: {self.salvage} €")
         print(f"Prix du carburant: {self.fuel_cost} €")
-        print(f"Consommation de carburant:{self.fuel_consumption} L/kW")
-        print(f"Efficacité: {self.efficiency}") 
 
 class Hydrogen:
     def __init__(self, name, lifetime, capacity, efficiency, capex_el, opex_el, capex_tank, opex_tank, salvage, max_start, max_use):
