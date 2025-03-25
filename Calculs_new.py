@@ -66,15 +66,15 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
             '''charger la batterie'''
 
             ##print("puissance max de charge :", number ,"<=", Batterie.charge_pw_max * param[4] )
-            if number <= Batterie.charge_pw_max * param[4] :
+            if number <= (Batterie.charge_pw_max * param[4])/Batterie.efficiency :
                 ##print(True) 
-                current_profile[3] = set_energy_batt(number)
+                current_profile[3] = set_energy_batt(Batterie.efficiency * number)
                 return current_profile
             ##print(False)
             '''charger la batterie et l'hydrogène'''
             ##print("puissance de charge dépassée")
             current_profile[3] = set_energy_batt(Batterie.charge_pw_max * param[4])
-            current_profile[4][0] += set_energy_h2(number - Batterie.charge_pw_max * param[4])[0]
+            current_profile[4][0] += set_energy_h2(number - Batterie.charge_pw_max * param[4] / Batterie.efficiency)[0]
             return current_profile
         
         '''charger l'hydrogène'''
@@ -82,7 +82,7 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
         if profile[4][-1] < Stockage_hydrogene.capacity * param[3]:
             ##print(True)
             ##print("charge h2 :", number)
-            current_profile = set_energy_h2(number)
+            current_profile = set_energy_h2(number * Stockage_hydrogene.efficiency)
             return current_profile
         
         ##print(False)
@@ -143,7 +143,7 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
         ##print(False)
 
         current_profile[2] = [Generateur_diesel.max_power * param[2]]
-        current_profile[6] = Generateur_diesel.max_power * param[2] + number
+        current_profile[6] = [Generateur_diesel.max_power * param[2] + number]
         ##print("Shortage :", Generateur_diesel.max_power * param[2] + number)
         return current_profile
     
