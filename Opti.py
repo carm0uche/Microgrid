@@ -31,7 +31,7 @@ bounds = [
 
 
 # Exécution de l'optimisation bayésienne
-result = shgo(objective, bounds, n=500, options={"maxiter": 1000, "itermin": 20, "disp": True, "ftol": 1e-4})
+result = shgo(objective, bounds, n=500, options={"maxiter": 1000, "itermin": 20, "disp": True, "ftol": 1e-4}, sampling_method='simplicial')
 
 # Résultats
 print("Meilleure config :", result.x)
