@@ -8,6 +8,7 @@ __pycache__/
 
 #VS code
 .vs/
+~$*.xlsx
 
 # Distribution / packaging
 .Python
