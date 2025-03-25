@@ -3,7 +3,7 @@ from skopt.space import Integer
 import numpy as np
 from Calculs_new import *
 from calcul_LCOE import *
-from Simulation import *
+from Simulation_new import *
 
 def objective(params):
 
