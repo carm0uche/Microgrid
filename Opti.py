@@ -28,7 +28,7 @@ bounds = [
     (0, 2000),   # Puissance électrolyseur
     (0, 2000),   # Puissance pile à combustible
     (0, 1000)]   # Taille du réservoir d'hydrogène
-]
+
 
 # Exécution de l'optimisation bayésienne
 result = shgo(objective, bounds, n=500, options={"maxiter": 1000, "itermin": 20, "disp": True, "ftol": 1e-4})
