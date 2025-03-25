@@ -65,8 +65,8 @@ D_OPEX = df_excel.iloc[8, 18] if pd.notna(df_excel.iloc[8, 18]) else 0.0
 D_Salvage = df_excel.iloc[9, 18] if pd.notna(df_excel.iloc[9, 18]) else 0.0
 D_Max_use = df_excel.iloc[10, 18] if pd.notna(df_excel.iloc[10, 18]) else 0.0
 D_Fuel_cost = df_excel.iloc[12, 18] if pd.notna(df_excel.iloc[12, 18]) else 0.0
-D_Fuel_consumption = [df_excel.iloc[4:14, 21].tolist(), df_excel.iloc[4:14, 22].tolist()]
-D_Efficiency = [df_excel.iloc[4:14, 21].tolist(), df_excel.iloc[4:14, 23].tolist()]
+D_Fuel_consumption = [df_excel.iloc[4:15, 21].tolist(), df_excel.iloc[4:15, 22].tolist()]
+D_Efficiency = [df_excel.iloc[4:15, 21].tolist(), df_excel.iloc[4:15, 23].tolist()]
 
 H_Name = "Stockage Hydrogène"
 H_Lifetime = df_excel.iloc[4, 14] if pd.notna(df_excel.iloc[4, 14]) else 0.0
@@ -97,6 +97,7 @@ Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost, D_Fuel_consumption, D_Efficiency)
 Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use)
 Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
+
 
 import matplotlib.pyplot as plt
 import numpy as np
