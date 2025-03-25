@@ -1,5 +1,6 @@
 from skopt import gp_minimize
 from skopt.space import Integer
+from scipy.optimize import shgo
 import numpy as np
 from Calculs_new import *
 from calcul_LCOE import *
@@ -20,16 +21,17 @@ def objective(params):
 
 
 # Définition de l'espace de recherche
-space = [
-    Integer(0, 100, name="nb_PV"),  # Exemple : entre 0 et 100 panneaux PV
-    Integer(0, 5, name="nb_WT"),   # Éoliennes
-    Integer(0, 5, name="nb_gen"),  # Générateurs
-    Integer(0, 50, name="nb_h2"),   # Stockage hydrogène
-    Integer(0, 100, name="nb_batt") # Batteries
+bounds = [
+    (0,10000), #Taille batterie 
+    (0,5000),  # Puissance PV
+    (0,5000),   # Puissance éolienne
+    (0, 2000),   # Puissance électrolyseur
+    (0, 2000),   # Puissance pile à combustible
+    (0, 1000)]   # Taille du réservoir d'hydrogène
 ]
 
 # Exécution de l'optimisation bayésienne
-result = gp_minimize(objective, space, n_calls=50, random_state=42)
+result = shgo(objective, bounds, n=500, options={"maxiter": 1000, "itermin": 20, "disp": True, "ftol": 1e-4})
 
 # Résultats
 print("Meilleure config :", result.x)
