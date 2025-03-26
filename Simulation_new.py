@@ -7,7 +7,7 @@ from calcul_LCOE import *
 def simulation_microgrid(params):
 
     #Simulation avec les paramètres correspondants
-    Simu = calcul_simu(params
+    Simu = calcul_simu(params)
 
     #Calcul shortage (on somme tous les shortages de la liste)
     Stg = - sum(Simu[6])
