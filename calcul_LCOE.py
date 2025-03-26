@@ -19,7 +19,7 @@ def calcul_LCOE_simu(params, simulation):
     opex_annuel_WT = Eolienne.rated_power * Eolienne.opex * params[1]
 
     for i in range(Lifetime) : 
-        opex_annualise_PV = opex_annuel_WT/(1+Discount_rate)**i
+        opex_annualise_WT = opex_annuel_WT/(1+Discount_rate)**i
         Opex_WT.append(opex_annualise_WT)
 
     ## Diesel ------------------------
@@ -50,11 +50,14 @@ def calcul_LCOE_simu(params, simulation):
     ##TOTAL ----------------------------------
 
     CAPEX = Capex_WT + Capex_PV + Capex_Diesel + Capex_H2 + Capex_Batt
-    OPEX = sum(Opex_WT) + sum(Opex_PV) + sum(Opex_Diesel) + sum(Opex_H2) + sum(Opex_Batt)
+    OPEX = sum(Opex_WT) + sum(Opex_PV) + sum(Opex_Diesel) + sum(Opex_Batt)
     TOTAL_EX = CAPEX + OPEX
 
     TOTAL_NRJ = sum(simulation[0]) + sum(simulation[1])
 
+    if TOTAL_NRJ == 0.0 :
+        return 1e9
+    
     return TOTAL_EX / TOTAL_NRJ
 
 

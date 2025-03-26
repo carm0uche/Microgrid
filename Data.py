@@ -56,7 +56,7 @@ interpolateur = interp1d(d_vitesses, d_puissances, kind='linear', fill_value="ex
 # Boucle pour calculer les puissances interpolées
 for i in range(n_lignes):
     wind = (float(df_excel_wind.iloc[i, 4]) if pd.notna(df_excel_wind.iloc[i, 4]) else 0.0) * (50/3)**0.1
-    W_P_v.append(interpolateur(wind))
+    W_P_v.append(float(interpolateur(wind)))
 
 D_Name = "Générateur diesel"
 D_Lifetime = df_excel.iloc[4, 18] if pd.notna(df_excel.iloc[4, 18]) else 0.0

@@ -4,17 +4,9 @@ from tqdm import tqdm
 
 #leviers d'optimisation
 #param = [PV_nb, WT_nb, Fuel_nb, H2_nb, Batt_nb]
-param = [0, 0, 0, 0, 0]
 
-#Valeurs initiales batterie & H2
-batt_init_value = 0.5 * Batterie.capacity * param[4]
-h2_init_value = 0.5 * Stockage_hydrogene.capacity * param[3]
-
-#profile = [Power_WT, Power_PV, Power_gen, level_batt, level_h2, curtailment, shortage]
-profile0 = [[0], [0], [0], [batt_init_value], [h2_init_value], [0], [0]]
-
-def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 = h2_init_value):
-
+def dispatch(i, profile, param):
+    ##print(i)
     current_profile = [[0], [0], [0], [profile[3][-1]], [profile[4][-1]], [0], [0]]
 
     #calcul puissance PV
@@ -82,7 +74,7 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
         if profile[4][-1] < Stockage_hydrogene.capacity * param[3]:
             ##print(True)
             ##print("charge h2 :", number)
-            current_profile = set_energy_h2(number * Stockage_hydrogene.efficiency)
+            current_profile[4] = set_energy_h2(number * Stockage_hydrogene.efficiency)
             return current_profile
         
         ##print(False)
@@ -108,10 +100,11 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
             current_level = profile[3][-1]
             ##print("niveau de batterie :", current_level)
             ##print("demande :", number)
+            ##print("utilisation de la batterie à hauteur de: ",Batterie.state_charge_min * Batterie.capacity * param[4] - current_level) 
             current_profile[3] = set_energy_batt(Batterie.state_charge_min * Batterie.capacity * param[4] - current_level)
             number = number +  current_level - Batterie.state_charge_min * Batterie.capacity * param[4]
 
-        current_profile[3] = [0]
+        
         ##print("Reste à combler :", number)
     
         ##print("Reste d'hydrogène :", profile[4][-1]," >", 0 )
@@ -132,7 +125,7 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
             number = number + current_level
             ##print("reste à combler :", number)
 
-        current_profile[4] = [0]
+        
         ##print(False) 
         '''allumer le générateur'''
         ##print("Assez de puissance fuel :", -number, "<", Generateur_diesel.max_power * param[2] )
@@ -147,27 +140,35 @@ def dispatch(i, profile = profile0, param = param, batt0 = batt_init_value, h20 
         ##print("Shortage :", Generateur_diesel.max_power * param[2] + number)
         return current_profile
     
-def heure_de_plus(i, profile = profile0, params = param) : 
-    if i == 0 :
-        current_profile = dispatch(i, profile0, params)
-        return current_profile
-    else :
-        current_profile = dispatch(i, profile, params)
+def heure_de_plus(i, profile, params) : 
+    ###print("heure :", i)
+    ###print("paramètres :", params)
+    ###print("load :", load[i])
+    ###print("[",profile[0][-1], profile[1][-1], profile[2][-1], profile[3][-1], profile[4][-1], profile[5][-1], profile[6][-1], "]")
     
+    current_profile = dispatch(i, profile, params)
+    if i>0 :
         for j in range(len(current_profile)):
             profile[j] += current_profile[j]
-    return profile
+        return profile
+    return current_profile
 
-def calcul_simu(params, simulation = False):
+def calcul_simu(params):
+
+    #Valeurs initiales batterie & H2
+    batt_init_value = 0.5 * Batterie.capacity * params[4]
+    h2_init_value = 0.5 * Stockage_hydrogene.capacity * params[3]
+
+    #profile = [Power_WT, Power_PV, Power_gen, level_batt, level_h2, curtailment, shortage]
+    profile0 = [[0], [0], [0], [batt_init_value], [h2_init_value], [0], [0]]
+
     profile = heure_de_plus(0, profile0, params)
-
-    for k in range(1,n_lignes) :
+    for k in range(1,10) :
         heure_de_plus(k, profile, params)
-
-    if simulation :
-        return [profile[2], profile[6]]
-    
+        print("load :", load[k])
+        print(profile)
     return profile
+
 
 #for i in tqdm(range(100), desc="Simulation en cours", unit="it"):   
     #profile = heure_de_plus(0)
@@ -175,4 +176,4 @@ def calcul_simu(params, simulation = False):
     #for k in range(1,n_lignes) :
      #heure_de_plus(k,profile)
     
-    #print("Fin de la simulation.")
+    ###print("Fin de la simulation.")
