@@ -25,12 +25,14 @@ def objective(params):
     return LCOE + lambda_weight * carbone
 
 # Définition de l'espace de recherche
-bounds = [ 
-    (0,100),  # Nb PV
-    (0,5),   # Nb éolienne
-    (0, 100),   # Nb Diesel
-    (0,100),   # Nb H2
-    (0,100)]   # Nb batterie
+bounds = [
+    (0,10000), #Taille batterie (kWh) 
+    (0,5000),  # Puissance PV (kW)
+    (0,5000),   # Puissance éolienne (kW)
+    (0, 2000),   # Puissance électrolyseur (kW) 
+    (0, 2000),   # Puissance pile à combustible (kW)
+    (0, 1000)]   # Taille du réservoir d'hydrogène (m^3) 
+
 
 print("Simulation en cours...")
 # Exécution de l'optimisation bayésienne
