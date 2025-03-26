@@ -22,12 +22,12 @@ def objective(params):
 
 # Définition de l'espace de recherche
 bounds = [
-    (0,10000), #Taille batterie 
-    (0,5000),  # Puissance PV
-    (0,5000),   # Puissance éolienne
-    (0, 2000),   # Puissance électrolyseur
-    (0, 2000),   # Puissance pile à combustible
-    (0, 1000)]   # Taille du réservoir d'hydrogène
+    (0,10000), #Taille batterie (kWh) 
+    (0,5000),  # Puissance PV (kW)
+    (0,5000),   # Puissance éolienne (kW)
+    (0, 2000),   # Puissance électrolyseur (kW) 
+    (0, 2000),   # Puissance pile à combustible (kW)
+    (0, 1000)]   # Taille du réservoir d'hydrogène (m^3) 
 ]
 
 # Exécution de l'optimisation bayésienne
