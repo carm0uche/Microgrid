@@ -63,7 +63,6 @@ def simulation(paramètres, durée = len(load), données = True, graphique = Fal
         decharge_batt = max(Batterie_level - dechargement_batt / Batterie.efficiency, Batterie.state_charge_min * Batterie.capacity * paramètres[3])
 
         latest_profile[3] = decharge_batt
-        print(i,decharge_batt)
         Diff = Diff + (decharge_batt - Batterie_level) * Batterie.efficiency
         
         # Utilisation de l'hydrogène
@@ -89,16 +88,17 @@ def simulation(paramètres, durée = len(load), données = True, graphique = Fal
     batt_init_value = 0.5 * Batterie.capacity * paramètres[3]
     h2_init_value = 0.5 * Stockage_hydrogene.capacity * paramètres[4]
     
-    profile = [[dispatch(0, batt_init_value, h2_init_value)[0]],
-               [dispatch(0, batt_init_value, h2_init_value)[1]],
-               [dispatch(0, batt_init_value, h2_init_value)[2]],
-               [dispatch(0, batt_init_value, h2_init_value)[3]],
-               [dispatch(0, batt_init_value, h2_init_value)[4]],
-               [dispatch(0, batt_init_value, h2_init_value)[5]],
-               [dispatch(0, batt_init_value, h2_init_value)[6]],]
+    profile0 = dispatch(0, batt_init_value, h2_init_value)
+
+    profile = [[profile0[0]],
+               [profile0[1]],
+               [profile0[2]],
+               [profile0[3]],
+               [profile0[4]],
+               [profile0[5]],
+               [profile0[6]]]
             
     for i in range(1,durée):
-
         current_profile = dispatch(i, profile[3][-1], profile[4][-1])
         for j in range(7):
             profile[j].append(current_profile[j])
@@ -171,6 +171,11 @@ def simulation(paramètres, durée = len(load), données = True, graphique = Fal
         print("Graphique à suivre")
 
     return rendu
+
+print(len(load))
+test = simulation([1,1,1,1,1])
+print(test[0], test[1], len(test[2]), len(test[2][0]))
+
 
 
 
