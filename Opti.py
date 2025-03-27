@@ -1,52 +1,50 @@
 from scipy.optimize import shgo
-import numpy as np
-from Calculs_new import *
-from calcul_LCOE import *
-from Simulation_new import *
+from Simu_final import *
 from tqdm import tqdm
-from skopt import gp_minimize
-from skopt.space import Integer
+from scipy.optimize import dual_annealing
+
+pbar = tqdm(total=10000)
 
 def objective(params):
     #print(params)
-
-    #params_entiers = [int(k) for k in params]
+    
+    params_entiers = [int(k) + 1 for k in params]
     #print(params_entiers)
-    # Appel du simulateur (à remplacer par la vraie fonction)
-    LCOE, carbone, shortage = simulation_microgrid(params)
+
+    pbar.update(1)
+    
+    LCOE, conso_fuel, profile = simulation(params_entiers)
+
+    shortage = sum(profile[-1])
 
     # Pénalité massive si le shortage > 0
     if shortage > 0:
         return 1e9  # Une valeur énorme pour rendre cette solution non viable
 
     # Fonction de coût pondérée
-    lambda_weight = 10  # Pondération écologique (modifiable)
+    lambda_weight = 1e-6  # Pondération écologique (modifiable)
     
-    return LCOE + lambda_weight * carbone
-
-# Définition de l'espace de recherche
-bounds = [
-    (0,10000), #Taille batterie (kWh) 
-    (0,5000),  # Puissance PV (kW)
-    (0,5000),   # Puissance éolienne (kW)
-    (0, 2000),   # Puissance électrolyseur (kW) 
-    (0, 2000),   # Puissance pile à combustible (kW)
-    (0, 1000)]   # Taille du réservoir d'hydrogène (m^3) 
-
+    return LCOE + lambda_weight * conso_fuel
 
 print("Simulation en cours...")
-# Exécution de l'optimisation bayésienne
-#result = shgo(objective, bounds, n=500, options={"maxiter": 1000, "itermin": 5, "disp": True, "ftol": 1e-2}, sampling_method='simplicial')
-result = gp_minimize(objective, bounds, n_calls=100, random_state=42)
+bounds = [
+    (0,6),   # Nombre d'éolienne
+    (0,5000),  # Nombre de PV
+    (0,5), # Nombre de générateurs diesel
+    (0,100), # Nombre de batteries
+    (0, 2000)]   # Nombre d'électrolyseur 
 
+
+
+# Exécution de l'optimisation bayésienne
+#result = shgo(objective, bounds, n=300, options={"maxiter": 500, "itermin": 20, "disp": True, "ftol": 1e-3} , sampling_method='simplicial')
+result = dual_annealing(objective, bounds, maxiter = 1000)
+pbar.close()
 
 # Résultats
 best_x = result.x
-#best_x_entier = [int(k) + 1 for k in best_x]
+best_x_entier = [int(k) + 1 for k in best_x]
 
 print("Meilleure config :", best_x)
-#print("Meilleure config entière :", best_x_entier)
+print("Meilleure config entière :", best_x_entier)
 print("Meilleur score :", result.fun)
-#print("Nombre total d'évaluations de la fonction objective :", result.nfev)
-#print("Nombre total d'itérations de SHGO :", result.nit)
-
