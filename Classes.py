@@ -64,7 +64,7 @@ class Fuel:
         print(f"Prix du carburant: {self.fuel_cost} €")
 
 class Hydrogen:
-    def __init__(self, name, lifetime, capacity, efficiency, capex_el, opex_el, capex_tank, opex_tank, salvage, max_start, max_use):
+    def __init__(self, name, lifetime, capacity, efficiency, capex_el, opex_el, capex_tank, opex_tank, salvage, max_start, max_use, charge_pw_max):
         """
         """
         self.name = name
@@ -78,6 +78,7 @@ class Hydrogen:
         self.salvage = salvage
         self.max_start = max_start
         self.max_use = max_use
+        self.charge_pw_max = charge_pw_max
 
     def display_info(self):
         """Affiche les informations sur la source d'énergie."""

@@ -35,7 +35,7 @@ PV_Power = df_excel.iloc[5, 6] if pd.notna(df_excel.iloc[5, 6]) else 0.0
 PV_Derating_factor = df_excel.iloc[10, 6] if pd.notna(df_excel.iloc[10, 6]) else 0.0
 PV_CAPEX = df_excel.iloc[8, 6] if pd.notna(df_excel.iloc[8, 6]) else 0.0
 PV_OPEX = df_excel.iloc[7, 6] if pd.notna(df_excel.iloc[7, 6]) else 0.0
-PV_Efficiency = df_excel.iloc[12, 6] if pd.notna(df_excel.iloc[12, 6]) else 0.0
+PV_Efficiency = df_excel.iloc[12, 6] if pd.notna(df_excel.iloc[12, 6]) else 1.0
 
 W_Name = "Éolienne"
 W_Lifetime = df_excel.iloc[4, 10] if pd.notna(df_excel.iloc[4, 10]) else 0.0
@@ -70,7 +70,7 @@ D_Fuel_cost = df_excel.iloc[12, 18] if pd.notna(df_excel.iloc[12, 18]) else 0.0
 H_Name = "Stockage Hydrogène"
 H_Lifetime = df_excel.iloc[4, 14] if pd.notna(df_excel.iloc[4, 14]) else 0.0
 H_Capacity = df_excel.iloc[5, 14] if pd.notna(df_excel.iloc[5, 14]) else 0.0
-H_Efficiency = df_excel.iloc[6, 14] if pd.notna(df_excel.iloc[6, 14]) else 0.0
+H_Efficiency = [df_excel.iloc[6, 14] if pd.notna(df_excel.iloc[6, 14]) else 1.0, df_excel.iloc[7, 14] if pd.notna(df_excel.iloc[7, 14]) else 1.0]
 H_CAPEX_el = df_excel.iloc[8, 14] if pd.notna(df_excel.iloc[8, 14]) else 0.0
 H_OPEX_el = df_excel.iloc[9, 14] if pd.notna(df_excel.iloc[9, 14]) else 0.0
 H_CAPEX_tank = df_excel.iloc[10, 14] if pd.notna(df_excel.iloc[10, 14]) else 0.0
@@ -78,6 +78,7 @@ H_OPEX_tank = df_excel.iloc[11, 14] if pd.notna(df_excel.iloc[11, 14]) else 0.0
 H_Salvage = df_excel.iloc[13, 14] if pd.notna(df_excel.iloc[13, 14]) else 0.0
 H_Max_start = df_excel.iloc[15, 14] if pd.notna(df_excel.iloc[15, 14]) else 0.0
 H_Max_use = df_excel.iloc[16, 14] if pd.notna(df_excel.iloc[16, 14]) else 0.0
+H_charge_pw_max = df_excel.iloc[14, 14] if pd.notna(df_excel.iloc[14, 14]) else 1.0
 
 B_Name = "Batterie lithium"
 B_Lifetime = df_excel.iloc[5, 2] if pd.notna(df_excel.iloc[5, 2]) else 0.0
@@ -94,7 +95,7 @@ B_Discharge_pw_max = df_excel.iloc[13, 2] if pd.notna(df_excel.iloc[13, 2]) else
 Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
 Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost)
-Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use)
+Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use, H_charge_pw_max)
 Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
 
 
