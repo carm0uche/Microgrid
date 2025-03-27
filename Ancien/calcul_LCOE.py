@@ -1,4 +1,4 @@
-from Data import *
+from Nouveau.Data import *
 
 def calcul_LCOE_simu(params, simulation):
 

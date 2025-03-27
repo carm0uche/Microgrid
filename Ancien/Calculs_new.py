@@ -1,5 +1,5 @@
-from Data import *
-from Classes import *
+from Nouveau.Data import *
+from Nouveau.Classes import *
 from tqdm import tqdm
 
 #leviers d'optimisation

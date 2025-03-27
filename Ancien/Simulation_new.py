@@ -1,6 +1,6 @@
-from Classes import *
+from Nouveau.Classes import *
 from Calculs_new import *
-from Data import *
+from Nouveau.Data import *
 from calcul_LCOE import *
 
 

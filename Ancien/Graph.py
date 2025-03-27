@@ -12,7 +12,7 @@ level_batt = np.array(level_batt)
 level_h2 = np.array(level_h2)
 curtailment = np.array(curtailment)
 shortage = np.array(shortage)
-loadg = np.array(load[:24])
+loadg = np.array(load)
 
 
 # Création de la figure
