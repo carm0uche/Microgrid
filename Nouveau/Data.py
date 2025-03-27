@@ -2,6 +2,7 @@ from Classes import *
 from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
+import sys
 
 import os
 print(os.getcwd())
@@ -78,6 +79,8 @@ H_CAPEX_el = df_excel.iloc[8, 14] if pd.notna(df_excel.iloc[8, 14]) else 0.0
 H_OPEX_el = df_excel.iloc[9, 14] if pd.notna(df_excel.iloc[9, 14]) else 0.0
 H_CAPEX_tank = df_excel.iloc[10, 14] if pd.notna(df_excel.iloc[10, 14]) else 0.0
 H_OPEX_tank = df_excel.iloc[11, 14] if pd.notna(df_excel.iloc[11, 14]) else 0.0
+H_CAPEX_fc = df_excel.iloc[18, 14] if pd.notna(df_excel.iloc[18, 14]) else 0.0
+H_OPEX_fc = df_excel.iloc[19, 14] if pd.notna(df_excel.iloc[19, 14]) else 0.0
 H_Salvage = df_excel.iloc[13, 14] if pd.notna(df_excel.iloc[13, 14]) else 0.0
 H_Max_start = df_excel.iloc[15, 14] if pd.notna(df_excel.iloc[15, 14]) else 0.0
 H_Max_use = df_excel.iloc[16, 14] if pd.notna(df_excel.iloc[16, 14]) else 0.0
@@ -98,7 +101,7 @@ B_Discharge_pw_max = df_excel.iloc[13, 2] if pd.notna(df_excel.iloc[13, 2]) else
 Panneau_solaire = PV(PV_Name, PV_Lifetime, PV_Power, PV_Derating_factor, PV_CAPEX, PV_OPEX, PV_Efficiency)
 Eolienne = WT(W_Name, W_Lifetime, W_Rated_power, W_CAPEX, W_OPEX, W_P_v)
 Generateur_diesel = Fuel(D_Name, D_Lifetime, D_Max_power, D_CAPEX, D_OPEX, D_Salvage, D_Max_use, D_Fuel_cost)
-Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_Salvage, H_Max_start, H_Max_use, H_charge_pw_max)
+Stockage_hydrogene = Hydrogen(H_Name, H_Lifetime, H_Capacity, H_Efficiency, H_CAPEX_el, H_OPEX_el, H_CAPEX_tank, H_OPEX_tank, H_CAPEX_fc, H_OPEX_fc, H_Salvage, H_Max_start, H_Max_use, H_charge_pw_max)
 Batterie = Batt(B_Name, B_Lifetime, B_Capacity, B_Efficiency, B_CAPEX, B_OPEX, B_State_charge_min, B_Thrpt, B_Charge_pw_max, B_Discharge_pw_max)
 
 
@@ -151,20 +154,20 @@ print("Succès.")
 #fichier recap données
 
 #with open("recap_datas.txt", "w") as f:
-#    sys.stdout = f  # Redirige tous les prints vers le fichier
-#    print("-- PV --")
-#    Panneau_solaire.display_info()
-#    print()
-#    print("-- WT --")
-#    Eolienne.display_info()
-#    print()
-#    print("-- Fuel --")
-#    Generateur_diesel.display_info()
-#    print()
-#    print("-- H2 --")
-#    Stockage_hydrogene.display_info()
-#   print()
-#   print("-- Batt --")
-#   Batterie.display_info()
+    #sys.stdout = f  # Redirige tous les prints vers le fichier
+    #print("-- PV --")
+    #Panneau_solaire.display_info()
+    #print()
+    #print("-- WT --")
+    #Eolienne.display_info()
+    #print()
+    #print("-- Fuel --")
+    #Generateur_diesel.display_info()
+    #print()
+    #print("-- H2 --")
+    #Stockage_hydrogene.display_info()
+    #print()
+    #print("-- Batt --")
+    #Batterie.display_info()
 
 

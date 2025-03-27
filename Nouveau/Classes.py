@@ -64,7 +64,7 @@ class Fuel:
         print(f"Prix du carburant: {self.fuel_cost} €")
 
 class Hydrogen:
-    def __init__(self, name, lifetime, capacity, efficiency, capex_el, opex_el, capex_tank, opex_tank, salvage, max_start, max_use, charge_pw_max):
+    def __init__(self, name, lifetime, capacity, efficiency, capex_el, opex_el, capex_tank, opex_tank, capex_fc, opex_fc, salvage, max_start, max_use, charge_pw_max):
         """
         """
         self.name = name
@@ -75,6 +75,8 @@ class Hydrogen:
         self.opex_el = opex_el
         self.capex_tank = capex_tank
         self.opex_tank = opex_tank
+        self.capex_fc = capex_fc
+        self.opex_fc = opex_fc
         self.salvage = salvage
         self.max_start = max_start
         self.max_use = max_use
@@ -90,6 +92,8 @@ class Hydrogen:
         print(f"OPEX électrolyseur: {self.opex_el} €/kW/an")
         print(f"CAPEX H2 tank: {self.capex_tank} €/kg")
         print(f"OPEX H2 tank: {self.opex_tank} €/kg/an")
+        print(f"CAPEX fc: {self.capex_fc} €/kW")
+        print(f"OPEX fc: {self.opex_fc} €/kW/an")
         print(f"Prix de récupération: {self.salvage} €")
         print(f"Nombre de démarrages max: {self.max_start}")
         print(f"Durée d'utilisation max: {self.max_use} h")

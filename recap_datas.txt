@@ -1,0 +1,52 @@
+-- PV --
+Nom: Panneau solaire
+Durée de vie: 25.0 années
+Puissance: 1.0 kW
+Derating factor : 80.0
+CAPEX: 3000.0 €/kWc/an
+OPEX: 10.0 €/kWc
+Rendement STC: 0.2
+
+-- WT --
+Nom: Éolienne
+Durée de vie: 25 années
+Puissance nominale: 900 kW
+CAPEX: 2000 €/kW
+OPEX: 100 €/kW/an
+Puissance en fonction de la vitesse du vent: [831.7264064801645, 868.6680087624381, 896.3717809815415, 900.0, 900.0, 900.0, 900.0, 900.0, 900.0, 900.0],...
+
+-- Fuel --
+Nom: Générateur diesel
+Durée de vie: 15.0 années
+Puissance: 1000.0 kW
+CAPEX: 500.0 €/kW
+OPEX: 262.79999999999995 €/kW/an
+Prix de récupération: 0.0 €
+Prix du carburant: 1.0 €
+
+-- H2 --
+Nom: Stockage Hydrogène
+Durée de vie: 20.0 années
+Capacité de stockage: 40.0 kWh
+Efficacité: [0.75, 0.55] %
+CAPEX électrolyseur: 1600.0 €/kW
+OPEX électrolyseur: 44.0 €/kW/an
+CAPEX H2 tank: 400.0 €/kg
+OPEX H2 tank: 4.0 €/kg/an
+CAPEX fc: 1600.0 €/kW
+OPEX fc: 45.0 €/kW/an
+Prix de récupération: 0.0 €
+Nombre de démarrages max: 5000.0
+Durée d'utilisation max: 45000.0 h
+
+-- Batt --
+Nom: Batterie lithium
+Durée de vie: 15.0 années
+Capacité: 100.0 kWh
+Efficacité: 0.95
+CAPEX: 550.0 €/kWh/an
+OPEX: 10.0 €/kWh
+État de charge minimal = 0.2 kWh
+THRPT = 3000.0 kWh/kW
+Puissance de charge max: = 1.002 kW
+Puissance de décharge max: = 3.0 kW
