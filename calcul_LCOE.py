@@ -30,12 +30,17 @@ def calcul_LCOE_simu(params, simulation):
 
     for i in range(Lifetime) : 
         opex_annualise_Diesel = opex_annuel_Diesel/(1+Discount_rate)**i
-        Opex_PV.append(opex_annualise_Diesel)
+        Opex_Diesel.append(opex_annualise_Diesel)
 
     ## H2 -------------------------------- //à compléter//
 
-    Capex_H2 = 0.0
-    Opex_H2 = 0.0
+    Capex_H2 = (Stockage_hydrogene.capacity * Stockage_hydrogene.capex_tank / 33,3 + Stockage_hydrogene.charge_pw_max * Stockage_hydrogene.capex_el) * params[3] 
+    Opex_H2 = []
+    opex_annuel_H2 = (Stockage_hydrogene.storage * Stockage_hydrogene.opex_tank + Stockage_hydrogene.capacity*Stockage_hydrogene.opex_el) * params[3]
+
+    for i in range(Lifetime) : 
+        opex_annualise_H2 = opex_annuel_H2/(1+Discount_rate)**i
+        Opex_H2.append(opex_annualise_H2)
 
     ## Batt ------------------------------
 
@@ -45,7 +50,7 @@ def calcul_LCOE_simu(params, simulation):
 
     for i in range(Lifetime) : 
         opex_annualise_Batt = opex_annuel_Batt/(1+Discount_rate)**i
-        Opex_PV.append(opex_annualise_Batt)
+        Opex_Batt.append(opex_annualise_Batt)
 
     ##TOTAL ----------------------------------
 
